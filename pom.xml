@@ -50,7 +50,7 @@ SOFTWARE.
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
             <configuration>
-              <finalName>spaxos</finalName>
+              <finalName>paxos-based-strong-consistent-cluster</finalName>
               <archive>
                 <manifest>
                   <mainClass>wtf.g4s8.examples.Main</mainClass>
