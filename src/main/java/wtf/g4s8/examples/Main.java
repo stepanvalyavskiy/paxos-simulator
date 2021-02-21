@@ -110,5 +110,6 @@ public final class Main {
         public Proposer<T> get() {
             return new Proposer<>(this.server.incrementAndGet(), "single-paxos", this.acceptors);
         }
+
     }
 }
