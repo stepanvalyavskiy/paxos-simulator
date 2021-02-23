@@ -93,7 +93,7 @@ public final class Proposer<T> {
         this.log = Log.logger(this);
     }
 
-    public Future<T> propose(final T value) {
+    public CompletableFuture<T> propose(final T value) {
         if (crashed) {
             return null;
         }
