@@ -15,6 +15,11 @@ public class TimeoutAcceptor<T> implements Acceptor<T> {
     }
 
     @Override
+    public T state() {
+        return acc.state();
+    }
+
+    @Override
     public void prepare(Proposal prop, PrepareCallback<T> callback) {
         sleep();
         this.acc.prepare(prop, new PrepareCallback<T>() {

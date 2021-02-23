@@ -15,6 +15,11 @@ public class DropAcceptor<T> implements Acceptor<T> {
     }
 
     @Override
+    public T state() {
+        return acc.state();
+    }
+
+    @Override
     public void prepare(Proposal prop, PrepareCallback<T> callback) {
         if (!drop()) {
             this.acc.prepare(prop, new PrepareCallback<T>() {

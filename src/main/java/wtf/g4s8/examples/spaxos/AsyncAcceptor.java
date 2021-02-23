@@ -13,6 +13,11 @@ public class AsyncAcceptor<T> implements Acceptor<T> {
     }
 
     @Override
+    public T state() {
+        return origin.state();
+    }
+
+    @Override
     public void prepare(Proposal prop, PrepareCallback<T> callback) {
         this.exec.execute(() -> this.origin.prepare(prop, new PrepareCallback<T>() {
             @Override

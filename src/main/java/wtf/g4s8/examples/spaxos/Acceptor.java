@@ -44,7 +44,7 @@ package wtf.g4s8.examples.spaxos;
  */
 public interface Acceptor<T>{
 
-
+    T state();
     /**
      * Prepare - first phase of accepting value.
      * <p>

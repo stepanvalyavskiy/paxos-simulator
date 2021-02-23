@@ -65,6 +65,11 @@ public final class InMemoryAcceptor<T> implements Acceptor<T> {
     }
 
     @Override
+    public T state() {
+        return mem.get();
+    }
+
+    @Override
     public synchronized void prepare(final Proposal prop, final PrepareCallback<T> callback) {
         if (this.min.compareTo(prop) > 0) {
             return;
