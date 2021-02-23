@@ -1,8 +1,6 @@
 package wtf.g4s8.examples;
 
 
-import static wtf.g4s8.examples.configuration.Config.cfg;
-
 public class Log {
 
     public interface Logger {
@@ -10,27 +8,17 @@ public class Log {
         void logf(String fmt, Object... args);
     }
 
-    public static final Logger DEFAULT = cfg.traceThreads ?
-            new Logger() {
-                public void log(String msg) {
-                    System.out.printf("[t:%s] %s\n", Thread.currentThread().getName(), msg);
-                }
-                public void logf(String fmt, Object... args) {
-                    System.out.printf("[t:" + Thread.currentThread().getName() + "] " + fmt + '\n', args);
-                }
-            }
-            :
-            new Logger() {
-                @Override
-                public void log(String msg) {
-                    System.out.println(msg);
-                }
+    public static final Logger DEFAULT = new Logger() {
+        @Override
+        public void log(String msg) {
+            System.out.println(msg);
+        }
 
-                @Override
-                public void logf(String fmt, Object... args) {
-                    System.out.printf(fmt + '\n', args);
-                }
-            };
+        @Override
+        public void logf(String fmt, Object... args) {
+            System.out.printf(fmt + '\n', args);
+        }
+    };
 
     public static final class PrefixedTx implements Logger {
         private final String prefix;
@@ -60,10 +48,7 @@ public class Log {
     }
 
     public static Logger logger(Object source) {
-        return cfg.traceThreads ?
-                new PrefixedTx(source.toString())
-                :
-                new Prefixed(source.toString());
+        return new Prefixed(source.toString());
     }
 
     private static final boolean DEBUG = true;

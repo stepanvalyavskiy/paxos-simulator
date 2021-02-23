@@ -72,18 +72,18 @@ public final class Proposer<T> {
     /**
      * List of acceptors. (assuming all aceptors are alive now).
      */
-    private final List<? extends Acceptor<T>> acceptors;
+    private final List<? extends TxAcceptor<T>> acceptors;
 
     private final CompletableFuture<T> future;
 
     /**
      * New proposer with server id and list of acceptors.
      */
-    public Proposer(final int server, final String transactionId, final List<? extends Acceptor<T>> acc) {
+    public Proposer(final int server, final String transactionId, final List<? extends TxAcceptor<T>> acc) {
         this(server, Proposal.init(server), transactionId, acc, new CompletableFuture<>(), false);
     }
 
-    private Proposer(final int serverId, final Proposal prop, final String transactionId, final List<? extends Acceptor<T>> acceptors, final CompletableFuture<T> future, Boolean crashed) {
+    private Proposer(final int serverId, final Proposal prop, final String transactionId, final List<? extends TxAcceptor<T>> acceptors, final CompletableFuture<T> future, Boolean crashed) {
         this.serverId = serverId;
         this.prop = prop;
         this.acceptors = acceptors;
@@ -99,9 +99,9 @@ public final class Proposer<T> {
         }
         final Proposal next = this.prop.next();
         log.logf("propose %s `%s`", next, value);
-        final QuorumPrepared<T> callback = new QuorumPrepared<>(next, value, this.acceptors, this);
+        final QuorumPrepared<T> callback = new QuorumPrepared<>(this.transactionId, next, value, this.acceptors, this);
         this.acceptors.parallelStream().forEach(
-                acc -> acc.prepare(next, callback)
+                acc -> acc.prepare(transactionId, next, callback)
         );
         EXEC_TIMEOUT.schedule(callback::timeout, cfg.paxosProposerTimeOutMilliseconds + RNG.nextInt(cfg.paxosProposerTimeOutMilliseconds /6), TimeUnit.MILLISECONDS);
         return this.future;
@@ -125,19 +125,21 @@ public final class Proposer<T> {
     }
 
 
-    private static final class QuorumPrepared<T> implements Acceptor.PrepareCallback<T> {
+    private static final class QuorumPrepared<T> implements TxAcceptor.PrepareCallback<T> {
 
-        private final List<? extends Acceptor<T>> acceptors;
+        private final List<? extends TxAcceptor<T>> acceptors;
         private final Proposal prop;
         private final Proposer<T> proposer;
         private final Log.Logger log;
 
         private volatile Proposal max;
         private volatile boolean done;
+        private String transactionId;
         private volatile T value;
         private volatile int cnt;
 
-        private QuorumPrepared(final Proposal prop, T value, List<? extends Acceptor<T>> acceptors, Proposer<T> proposer) {
+        private QuorumPrepared(final String transactionId, final Proposal prop, T value, List<? extends TxAcceptor<T>> acceptors, Proposer<T> proposer) {
+            this.transactionId = transactionId;
             this.value = value;
             this.acceptors = acceptors;
             this.max = prop;
@@ -204,7 +206,7 @@ public final class Proposer<T> {
                 );
                 EXEC_TIMEOUT.schedule(callback::timeout, 3000 + RNG.nextInt(500), TimeUnit.MILLISECONDS);
                 this.acceptors.parallelStream().forEach(
-                        acc -> acc.accept(this.prop, this.value, callback)
+                        acc -> acc.accept(transactionId, this.prop, this.value, callback)
                 );
             } else if (force) {
                 this.done = true;
@@ -214,7 +216,7 @@ public final class Proposer<T> {
         }
     }
 
-    private static final class AcceptCallback<T> implements Acceptor.AcceptCallback<T> {
+    private static final class AcceptCallback<T> implements TxAcceptor.AcceptCallback<T> {
 
         private final Proposer<T> proposer;
         private final Proposal prop;
