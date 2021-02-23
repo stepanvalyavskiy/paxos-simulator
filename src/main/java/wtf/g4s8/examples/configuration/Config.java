@@ -1,13 +1,12 @@
 package wtf.g4s8.examples.configuration;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class Config {
 
-    public final static Config cfg = Main.initConfig();
+    public static Config cfg = Main.initConfig();
     /**
      * Cluster size
      */

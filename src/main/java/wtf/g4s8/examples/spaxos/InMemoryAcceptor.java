@@ -24,7 +24,6 @@
 
 package wtf.g4s8.examples.spaxos;
 
-import wtf.g4s8.examples.system.Sync;
 import wtf.g4s8.examples.Log;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -89,14 +88,6 @@ public final class InMemoryAcceptor<T> implements Acceptor<T> {
         }
     }
 
-    @Override
-    public void requestValue(Sync.Receiver<T> callback) {
-        final T value = mem.get();
-        log.logf("asked for value, has `%s`", value);
-        if (value != null) {
-            callback.receive(value, this.toString());
-        }
-    }
     public String toString() {
         return String.format("acceptor-(txn:%s, s:%s)", this.transactionId, this.parentServerId);
     }

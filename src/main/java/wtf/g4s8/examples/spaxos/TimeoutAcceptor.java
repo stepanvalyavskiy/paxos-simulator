@@ -1,6 +1,5 @@
 package wtf.g4s8.examples.spaxos;
 
-import wtf.g4s8.examples.system.Sync;
 
 import java.util.Random;
 
@@ -41,18 +40,6 @@ public class TimeoutAcceptor<T> implements Acceptor<T> {
             public void accepted(Proposal prop, T value, String metadata) {
                 sleep();
                 callback.accepted(prop, value, metadata);
-            }
-        });
-    }
-
-    @Override
-    public void requestValue(Sync.Receiver<T> callback) {
-        sleep();
-        acc.requestValue(new Receiver<>() {
-            @Override
-            public void receive(T value, String metadata) {
-                sleep();
-                callback.receive(value, metadata);
             }
         });
     }

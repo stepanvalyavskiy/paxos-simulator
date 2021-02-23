@@ -24,8 +24,6 @@
 
 package wtf.g4s8.examples.spaxos;
 
-import wtf.g4s8.examples.system.Sync;
-
 /**
  * Paxos acceptor.
  * <p>
@@ -44,7 +42,7 @@ import wtf.g4s8.examples.system.Sync;
  *
  * @since 1.0
  */
-public interface Acceptor<T> extends Sync<T> {
+public interface Acceptor<T>{
 
 
     /**

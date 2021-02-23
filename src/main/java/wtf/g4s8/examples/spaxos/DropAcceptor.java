@@ -1,7 +1,5 @@
 package wtf.g4s8.examples.spaxos;
 
-import wtf.g4s8.examples.system.Sync;
-
 import java.util.Random;
 
 public class DropAcceptor<T> implements Acceptor<T> {
@@ -45,20 +43,6 @@ public class DropAcceptor<T> implements Acceptor<T> {
                 public void accepted(Proposal prop, T value, String metadata) {
                     if (!drop()) {
                         callback.accepted(prop, value, metadata);
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    public void requestValue(Sync.Receiver<T> callback) {
-        if (!drop()) {
-            acc.requestValue(new Sync.Receiver<T>(){
-                @Override
-                public void receive(T value, String metadata) {
-                    if (!drop()) {
-                        callback.receive(value, metadata);
                     }
                 }
             });

@@ -125,7 +125,7 @@ public final class Proposer<T> {
     }
 
 
-    private static final class QuorumPrepared<T> implements TxAcceptor.PrepareCallback<T> {
+    private static final class QuorumPrepared<T> implements Acceptor.PrepareCallback<T> {
 
         private final List<? extends TxAcceptor<T>> acceptors;
         private final Proposal prop;
@@ -216,7 +216,7 @@ public final class Proposer<T> {
         }
     }
 
-    private static final class AcceptCallback<T> implements TxAcceptor.AcceptCallback<T> {
+    private static final class AcceptCallback<T> implements Acceptor.AcceptCallback<T> {
 
         private final Proposer<T> proposer;
         private final Proposal prop;

@@ -48,7 +48,7 @@ public final class Proposal implements Comparable<Proposal> {
     /**
      * Server ID.
      */
-    private final int server;
+    public final int server;
 
     /**
      * New proposal.

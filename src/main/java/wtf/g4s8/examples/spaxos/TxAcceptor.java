@@ -1,8 +1,6 @@
 package wtf.g4s8.examples.spaxos;
 
-import wtf.g4s8.examples.system.Sync;
-
-public interface TxAcceptor<T> extends Sync<T> {
+public interface TxAcceptor<T>  {
 
     /**
      * Prepare - first phase of accepting value.
@@ -15,7 +13,7 @@ public interface TxAcceptor<T> extends Sync<T> {
      * accepted value.
      * </p>
      */
-    void prepare(String txId, Proposal prop, TxAcceptor.PrepareCallback<T> callback);
+    void prepare(String txId, Proposal prop, Acceptor.PrepareCallback<T> callback);
 
     /**
      * Accept - second phase of accepting value.
@@ -25,7 +23,7 @@ public interface TxAcceptor<T> extends Sync<T> {
      * accepted value. In any case it returns minimal proposed number
      * as a response.
      */
-    void accept(String txId, Proposal prop, T value, TxAcceptor.AcceptCallback<T> callback);
+    void accept(String txId, Proposal prop, T value, Acceptor.AcceptCallback<T> callback);
 
     /**
      * Callback should be implemented by proposer for asynchronous communication.

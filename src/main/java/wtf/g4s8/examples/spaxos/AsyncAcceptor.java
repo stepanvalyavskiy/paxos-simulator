@@ -1,7 +1,5 @@
 package wtf.g4s8.examples.spaxos;
 
-import wtf.g4s8.examples.system.Sync;
-
 import java.util.concurrent.Executor;
 
 public class AsyncAcceptor<T> implements Acceptor<T> {
@@ -35,16 +33,6 @@ public class AsyncAcceptor<T> implements Acceptor<T> {
             @Override
             public void accepted(Proposal prop, T value, String metadata) {
                 exec.execute(() -> callback.accepted(prop, value, metadata));
-            }
-        }));
-    }
-
-    @Override
-    public void requestValue(Sync.Receiver<T> callback) {
-        this.exec.execute(() -> this.origin.requestValue(new Receiver<>() {
-            @Override
-            public void receive(T value, String metadata) {
-                exec.execute(() -> callback.receive(value, metadata));
             }
         }));
     }
