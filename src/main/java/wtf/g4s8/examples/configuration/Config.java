@@ -1,12 +1,24 @@
 package wtf.g4s8.examples.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+
+import java.io.File;
 
 @AllArgsConstructor
 public class Config {
 
-    public static Config cfg = Main.initConfig();
+    @SneakyThrows
+    public static Config initConfig(String filePath) {
+        final String defaultCfg = "./src/main/resources/default_cfg.yml";
+        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        return mapper.readValue(new File(filePath), Config.ConfigBuilder.class).build();
+    }
+
+    public static Config cfg;
     /**
      * Cluster size
      */
